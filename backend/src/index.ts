@@ -36,8 +36,6 @@ app.use(
     })
 );
 
-console.log('tets');
-
 app.use(
     session({
         secret: "secretcode",
