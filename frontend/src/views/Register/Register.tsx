@@ -36,20 +36,24 @@ export const Register = () => {
         validationSchema,
         validateOnChange: false,
         onSubmit: async (values) => {
+            const registerToast = LoadingToast("Registering...");
             setResponse(null);
             const data = {
                 ...values,
                 email: values.email.toLowerCase(),
             };
-            await registerUser(data).then((data) => {
-                const registerToast = LoadingToast("Registering...");
+            await registerUser(data)
+            .then((data) => {
                 setResponse(data.message);
                 if (data.message === "User added succesfully") {
                     formik.resetForm();
                     UpdateToast(registerToast, "Account registered successfully!", "success");
                     navigate("/");
+                    hideMessage();
+                    return;
                 }
-            });
+                UpdateToast(registerToast, `Something went wrong! ${data.message}`, "error");
+            })       
             hideMessage();
         },
     });
