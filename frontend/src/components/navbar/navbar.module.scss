@@ -31,6 +31,9 @@ header {
     display: flex;
     flex-direction: row;
     padding-right: $spacer-32;
+    font-size: 30px;
+    font-weight: $font-weight-700;
+    color: $c-primary-1;
 }
 
 .logo:hover {
