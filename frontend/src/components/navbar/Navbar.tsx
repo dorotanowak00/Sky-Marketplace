@@ -52,7 +52,7 @@ export const Navbar = () => {
             <div className={style.wrapper}>
                 <div className={style.left}>
                     <div className={style.logo} onClick={() => checkLink()}>
-                        <img src={logo} alt="logo" />
+                        SkyMarketplace
                     </div>
                     <div className={style.searchInput}>
                         <label htmlFor="search" className={style.label}>

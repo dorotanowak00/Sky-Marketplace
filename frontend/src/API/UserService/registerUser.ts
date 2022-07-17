@@ -1,6 +1,6 @@
 import Config from 'config';
 
-const url = `${Config.API_URL}/user/register`;
+const url = `${process.env.REACT_APP_DATABASE_BASE_URL}/user/register`;
 
 export const registerUser = async (data: {}) => {
     try {
