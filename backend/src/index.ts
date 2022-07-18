@@ -1,20 +1,26 @@
 import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+
 const passport = require("passport");
 const session = require("express-session");
+const cloudinary = require("cloudinary").v2;
+const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
+
 dotenv.config();
 const port = process.env.PORT;
 const mongo = process.env.MONGO || "";
-const cloudinary = require("cloudinary").v2;
+const frontendURL = process.env.FRONTEND_URL || "";
 
-const mongoose = require("mongoose");
-const MongoStore = require("connect-mongo");
 const app: Express = express();
 
+import http from 'http';
+const server = http.createServer(app);
+//change 8080 -> server in producction
 const io = require("socket.io")(8080, {
     cors: {
-        origin: ["http://localhost:3000"],
+        origin: ["http://localhost:3000", frontendURL],
     },
 });
 
@@ -31,11 +37,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", frontendURL],
         credentials: true,
     })
 );
 
+app.set('trust proxy', 1)
 app.use(
     session({
         secret: "secretcode",
@@ -49,6 +56,9 @@ app.use(
         }),
         cookie: {
             maxAge: 2 * 60 * 60 * 1000, //2h
+            // secure: true,
+            httpOnly: true,
+            // sameSite: 'none'
         },
     })
 );
@@ -84,7 +94,7 @@ app.use("/search", searchRoute);
 mongoose
     .connect(mongo, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() =>
-        app.listen(port, () => console.log(`Server Running on Port: http://localhost:${port}`))
+        server.listen(port, () => console.log(`Server Running on Port: http://localhost:${port}`))
     )
     .catch((error: any) => console.log(`${error} did not connect`));
 
